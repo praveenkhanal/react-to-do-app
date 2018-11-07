@@ -10,6 +10,10 @@ class TodoModel {
       let request = axios.post("https://super-crud-api.herokuapp.com/api/todos", todo)
       return request
     }
+    static delete(todo){
+      let request = axios.delete(`https://super-crud-api.herokuapp.com/api/todos/${todo._id}`)
+      return request
+    }
   }
   
   export default TodoModel;
