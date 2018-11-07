@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 
-class Todos extends Component {
+class TodosContainer extends Component {
   render() {
     return (
-      <h2>
-        this is Todos
-      </h2>
+        <div className='todosContainer'>
+        <h2> This is the todos container</h2>
+
+        </div>
+      
     );
   }
 }
 
-export default Todos;
+export default TodosContainer
