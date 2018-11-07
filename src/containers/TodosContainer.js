@@ -7,8 +7,12 @@ class TodosContainer extends Component {
   constructor(){
     super()
     this.state = {
-      todos: []
-    }
+      todos: [],
+       editingTodoId: null,
+        editing: false
+      }
+    this.updateTodo = this.updateTodo.bind(this);
+    this.editTodo = this.editTodo.bind(this);
     this.createTodo = this.createTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
   }
@@ -31,7 +35,6 @@ class TodosContainer extends Component {
         this.setState({newTodos})
     })
 }
-
   componentDidMount(){
     this.fetchData()
   }
@@ -43,19 +46,39 @@ class TodosContainer extends Component {
       })
     })
   }
-  render(){
-    return (
-      <div className="todosComponent">
-        <Todos
-          todos={this.state.todos}
-          onDeleteTodo={this.deleteTodo} />
-          <CreateTodoForm
-        createTodo={ this.createTodo }
-        />
-      </div>
-    );
+  updateTodo(todoBody) {
+    var todoId = this.state.editingTodoId
+    function isUpdatedTodo(todo) {
+        return todo._id === todoId;
+    }
+    TodoModel.update(todoId, todoBody).then((res) => {
+        let todos = this.state.todos
+        todos.find(isUpdatedTodo).body = todoBody
+        this.setState({todos: todos, editingTodoId: null, editing: false})
+    })
   }
-  
-}
+  editTodo(todo){
+  this.setState({
+    editingTodoId: todo._id,
+    editing: true
+  })
+  }
 
+
+render(){
+return (
+  <div className='TodosContainer'>
+    <h2>This is the Todos Container</h2>
+    <Todos
+      todos={this.state.todos}
+      editingTodoId={this.state.editingTodoId}
+      onEditTodo={this.editTodo}
+      onDeleteTodo={this.deleteTodo} 
+      onUpdateTodo={this.updateTodo} />
+    <CreateTodoForm
+      createTodo={this.createTodo} />
+  </div>
+)
+}
+}
 export default TodosContainer;
