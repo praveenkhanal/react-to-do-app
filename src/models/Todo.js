@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 class TodoModel {
+
     static all(){
         
-        let request = axios.get("https://super-crud-api.herokuapp.com/api/todos",)
-        return request
+    let request = axios.get("https://super-crud-api.herokuapp.com/api/todos",)
+      return request
     }
     static create(todo) {
       let request = axios.post("https://super-crud-api.herokuapp.com/api/todos", todo)
@@ -15,12 +16,13 @@ class TodoModel {
       return request
     }
     static update(todoId, todoBody) {
-      let request = axios.put(`https://super-crud-api.herokuapp.com/api/todos/${todoId}`, {
-          body: todoBody
+    let request = axios.put(`https://super-crud-api.herokuapp.com/api/todos/${todoId}`, {
+      body: todoBody
       })
       return request
-  }
-  }
+    }
+    }
+  
   
   export default TodoModel;
   

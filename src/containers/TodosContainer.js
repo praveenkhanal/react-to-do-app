@@ -2,72 +2,74 @@ import React, {Component} from 'react';
 import TodoModel from '../models/Todo';
 import Todos from '../components/Todos';
 import CreateTodoForm from '../components/CreateTodoForm';
+// import TodoForm from '../components/TodoForm';
 
-class TodosContainer extends Component {
-  constructor(){
+  class TodosContainer extends Component {
+    constructor(){
     super()
     this.state = {
       todos: [],
        editingTodoId: null,
-        editing: false
+       editing: false
       }
-    this.updateTodo = this.updateTodo.bind(this);
-    this.editTodo = this.editTodo.bind(this);
-    this.createTodo = this.createTodo.bind(this);
-    this.deleteTodo = this.deleteTodo.bind(this);
-  }
-  deleteTodo(todo) {
+      this.createTodo = this.createTodo.bind(this);
+      this.deleteTodo = this.deleteTodo.bind(this); 
+      this.updateTodo = this.updateTodo.bind(this);
+      this.editTodo = this.editTodo.bind(this);
+      
+      }
+    createTodo(todo) {
+      let newTodo = {
+      body: todo,
+      completed: false
+      }
+      TodoModel.create(newTodo).then((res) => {
+      let todos = this.state.todos
+      let newTodos = todos.push(res.data)
+      this.setState({newTodos})
+      })
+      }
+    deleteTodo(todo) {
     TodoModel.delete(todo).then((res) => {
-        let todos = this.state.todos.filter(function(todo) {
-          return todo._id !== res.data._id
-        });
-        this.setState({todos})
-    })
-}
-  createTodo(todo) {
-    let newTodo = {
-        body: todo,
-        completed: false
-    }
-    TodoModel.create(newTodo).then((res) => {
-        let todos = this.state.todos
-        let newTodos = todos.push(res.data)
-        this.setState({newTodos})
-    })
-}
-  componentDidMount(){
+      let todos = this.state.todos.filter(function(todo) {
+      return todo._id !== res.data._id
+      });
+      this.setState({todos})
+      })
+      }
+  
+    updateTodo(todoBody) {
+      let todoId = this.state.editingTodoId
+      function isUpdatedTodo(todo) {
+      return todo._id === todoId;
+      }
+      TodoModel.update(todoId, todoBody).then((res) => {
+      let todos = this.state.todos
+      todos.find(isUpdatedTodo).body = todoBody
+      this.setState({todos: todos, editingTodoId: null, editing: false})
+      })
+      }
+    editTodo(todo){
+      console.log("editing, id:", todo._id);
+      this.setState({
+      editingTodoId: todo._id,
+      editing: true
+      })
+      }
+    componentDidMount(){
     this.fetchData()
-  }
-  fetchData(){
+    }
+    fetchData(){
     TodoModel.all().then( (res) => {
       this.setState ({
-        todos: res.data.todos,
-        todo: ''
+      todos: res.data.todos,
+      todo: ''
       })
-    })
-  }
-  updateTodo(todoBody) {
-    var todoId = this.state.editingTodoId
-    function isUpdatedTodo(todo) {
-        return todo._id === todoId;
+      })
     }
-    TodoModel.update(todoId, todoBody).then((res) => {
-        let todos = this.state.todos
-        todos.find(isUpdatedTodo).body = todoBody
-        this.setState({todos: todos, editingTodoId: null, editing: false})
-    })
-  }
-  editTodo(todo){
-  this.setState({
-    editingTodoId: todo._id,
-    editing: true
-  })
-  }
-
-
-render(){
-return (
-  <div className='TodosContainer'>
+  render(){
+    return (
+    <div className='TodosComponent'>
     <h2>This is the Todos Container</h2>
     <Todos
       todos={this.state.todos}
@@ -75,10 +77,10 @@ return (
       onEditTodo={this.editTodo}
       onDeleteTodo={this.deleteTodo} 
       onUpdateTodo={this.updateTodo} />
-    <CreateTodoForm
+      <CreateTodoForm
       createTodo={this.createTodo} />
-  </div>
-)
-}
-}
+    </div>
+    )
+    }
+  }
 export default TodosContainer;

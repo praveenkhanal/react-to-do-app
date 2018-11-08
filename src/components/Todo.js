@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import TodoForm from './TodoForm';
 
 class Todo extends Component {
   constructor() {
@@ -14,32 +15,32 @@ class Todo extends Component {
   }
   editClickedTodo() {
     this.props.onEditTodo(this.props.todo)
-}
-onChange(event) {
+  }
+  onChange(event) {
   this.setState({
-    todo: event.target.value
+  todo: event.target.value
   })
-}
-onSubmit(event){
+  }
+  onSubmit(event){
   event.preventDefault()
   var todo = this.state.todo
   this.props.onUpdateTodo(todo)
   this.setState({
-    todo: ""
+  todo: ""
   })
-}
+  }
 
   render(){
-    return(
-      <span data-todos-index={this.props.todo.id}>
-      <span onClick={ this.props.editClickedTodo }>
-        {this.props.todo.body}
+
+    console.log("in todo", this.props.editingTodoId, this.props.todo_id)
+  return(
+   <span data-todos-index={this.props.todo.id}>
+    <span onClick={ this.editClickedTodo }>
+     {this.props.todo.body}
       </span>
-      { this.props.editingTodoId === this.props.todo._id ? `<TodoForm
-    autoFocus={true}
-   buttonName="Update Todo!"
-    onUpdateTodo={this.props.onUpdateTodo} />
-  ` : '' }
+      { this.props.editingTodoId === this.props.todo._id ? <TodoForm
+      autoFocus={true}
+      buttonName="Update Todo!" onUpdateTodo={this.props.onUpdateTodo} /> : '' }
       <span
         className='deleteButton'
         onClick={ this.deleteClickedTodo }>
